@@ -1,0 +1,152 @@
+create table student
+(	
+roll_no int primary key,
+name text,
+class text,
+birthdate int
+);
+
+insert into student
+values(1,'nensi','sy',02-06-2004);
+insert into student
+values(2,'riya','sy',11-03-2004);
+insert into student
+values(3,'nikita','ty',28-07-2003);
+insert into student
+values(4,'honey','fy',02-06-2005);
+insert into student
+values(5,'maitri','fy',02-06-2005);
+insert into student
+values(6,'shruti','sy',02-06-2004);
+insert into student
+values(7,'tisha','ty',02-06-2003);
+
+ select * from student;
++---------+--------+-------+-----------+
+| roll_no |  name  | class | birthdate |
++---------+--------+-------+-----------+
+| 1       | nensi  | sy    | -2008     |
+| 2       | riya   | sy    | -1996     |
+| 3       | nikita | ty    | -1982     |
+| 4       | honey  | fy    | -2009     |
+| 5       | maitri | fy    | -2009     |
+| 6       | shruti | sy    | -2008     |
+| 7       | tisha  | ty    | -2007     |
++---------+--------+-------+-----------+
+
+create table course
+(
+course_no int primary key,
+course_name text,
+max_marks int,
+pass_marks int
+);
+
+insert into course
+values(11,'BCA',100,35);
+insert into course
+values(12,'BBA',100,35);
+insert into course
+values(13,'Computer Network',100,35);
+insert into course
+values(14,'BCA',100,35);
+insert into course
+values(15,'BCA',100,35);
+insert into course
+values(16,'BBA',100,35);
+insert into course
+values(17,'Computer Network',100,35);
+insert into course 
+values(18,'database managment system',100,35);
+
+select * from course;
++-----------+------------------+-----------+------------+
+| course_no |   course_name    | max_marks | pass_marks |
++-----------+------------------+-----------+------------+
+| 11        | BCA              | 100       | 35         |
+| 12        | BBA              | 100       | 35         |
+| 13        | Computer Network | 100       | 35         |
+| 14        | BCA              | 100       | 35         |
+| 15        | BCA              | 100       | 35         |
+| 16        | BBA              | 100       | 35         |
+| 17        | Computer Network | 100       | 35         |
++-----------+------------------+-----------+------------+
+
+create table sc
+(
+roll_no int references student(roll_no),
+course_no int references course(course_no),
+marks int
+);
+
+insert into sc
+values(1,11,98);
+insert into sc
+values(2,12,90);
+insert into sc
+values(3,13,89);
+insert into sc
+values(4,14,95);
+insert into sc
+values(5,15,70);
+insert into sc
+values(6,16,65);
+insert into sc
+values(7,17,45);
+
+select * from sc;
++---------+-----------+-------+
+| roll_no | course_no | marks |
++---------+-----------+-------+
+| 1       | 11        | 98    |
+| 2       | 12        | 90    |
+| 3       | 13        | 89    |
+| 4       | 14        | 95    |
+| 5       | 15        | 70    |
+| 6       | 16        | 65    |
+| 7       | 17        | 45    |
++---------+-----------+-------
+
+
+6. select *,max(marks) from sc m,student s
+   where s.roll_no=m.roll_no and m.course_no=(select course_no from course where course_name="computer network");
++---------+-----------+-------+---------+------+-------+-----------+------------+
+| roll_no | course_no | marks | roll_no | name | class | birthdate | max(marks) |
++---------+-----------+-------+---------+------+-------+-----------+------------+
+|         |           |       |         |      |       |           |            |
++---------+-----------+-------+---------+------+-------+-----------+------------+
+
+7. select s.*,c.course_name from student s,sc m,course c
+   where s.roll_no=m.roll_no and c.course_no=m.course_no and s.class='sy';
++---------+--------+-------+-----------+-------------+
+| roll_no |  name  | class | birthdate | course_name |
++---------+--------+-------+-----------+-------------+
+| 1       | nensi  | sy    | -2008     | BCA         |
+| 2       | riya   | sy    | -1996     | BBA         |
+| 6       | shruti | sy    | -2008     | BBA         |
++---------+--------+-------+-----------+-------------+
+
+8.select *,avg(marks) from sc
+  group by roll_no;
++---------+-----------+-------+------------+
+| roll_no | course_no | marks | avg(marks) |
++---------+-----------+-------+------------+
+| 1       | 11        | 98    | 98.0       |
+| 2       | 12        | 90    | 90.0       |
+| 3       | 13        | 89    | 89.0       |
+| 4       | 14        | 95    | 95.0       |
+| 5       | 15        | 70    | 70.0       |
+| 6       | 16        | 65    | 65.0       |
+| 7       | 17        | 45    | 45.0       |
++---------+-----------+-------+------------+
+
+9.create trigger del_trg
+	before delete on student
+	begin
+		select case
+			when(select s.*,c.*,m.* from student s,COURSE C,SC M
+ WHERE S.ROLL_NO=M.ROLL_NO AND C.COURSE_NO=M.COURSE_NO AND C.PASS_MARKS>35)
+				
+THEN RAISE(ABORT,'WHEN THE SUBJECT HAVE PASSING MARKS MORE THEN 35 ')
+		END;
+	END;
