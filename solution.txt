@@ -1,0 +1,63 @@
+import sqlite3;
+
+con=sqlite3.connect("21bca41.db")
+cur=con.cursor()
+
+#con.execute("create table department2(dept_no int primary key,dept_name text,location text)")
+print("table created")
+
+#user to insert data:
+for i in range(5):
+    dept_no=input("enter dept_no:")
+    dept_name=input("enter dept_name:")
+    location=input("enter location:")
+    con.execute("insert into department2 values(?,?,?)",(dept_no,dept_name,location))
+print("table inserted",con.total_changes)
+
+cursor=con.execute("select * from department2")
+for row in cursor:
+    print("dept_no=",row[0])
+    print("dept_name=",row[1])
+    print("location=",row[2])
+
+rows=cur.execute('pragma foreign_keys')
+for r in rows:
+    print(r)
+
+con.execute("create table employee(emp_id int primary key,emp_name text,gender text,dept_no int,address text,designation text,salary int,experience text,email text)")
+print("table created")
+
+for i in range(5):
+    emp_id=input("enter id:")
+    emp_name=input("enter emp_name:")
+    gender=input("enter gender:")
+    dept_no=input("enter dept_no:")
+    address=input("enter address:")
+    designation=input("enter designation:")
+    salary=input("enter salary:")
+    experience=input("enter experience:")
+    email=input("enter email:")
+    con.execute("insert into employee values(?,?,?,?,?,?,?,?,?)",(emp_id,emp_name,gender,dept_no,address,designation,salary,experience,email))
+print("table inserted",con.total_changes)
+
+cursor=con.execute("select * from employee")
+for row in cursor:
+    print=("emp_id=",row[0])
+    print=("emp_id=",row[1])
+    print=("emp_id=",row[2])
+    print=("emp_id=",row[3])
+    print=("emp_id=",row[4])
+    print=("emp_id=",row[5])
+    print=("emp_id=",row[6])
+    print=("emp_id=",row[7])
+    print=("emp_id=",row[8])
+
+cur.execute("select * from department where location='Surat';")
+data=cur.fetchall()
+print(data)
+
+
+
+
+
+   
